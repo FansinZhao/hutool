@@ -399,4 +399,47 @@ public final class ReUtil {
 		}
 		return builder.toString();
 	}
+
+    /**
+     *
+     * 使用正则替换字符串内容为 replacement .当替换后的结果依然满足正则标准,
+     * 则继续替换,直到没有子字符串满足正则匹配条件.
+     *
+     * @param content 需要匹配的字符串
+     * @param regex 正则表达式
+     * @param replacement 匹配内容需要替换的字符串
+     * @return 处理结果
+     */
+	public static String smartReplace(String content,String regex,String replacement){
+
+	    if (StrUtil.isBlank(content)){
+            return content;
+        }
+
+        if (replacement == null){
+	        return null;
+        }
+
+	    Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(content);
+
+		StringBuffer sb =new StringBuffer();
+		int length = -1;
+		while (true){
+
+		    while (matcher.find()){
+				matcher.appendReplacement(sb,replacement);
+			}
+			matcher.appendTail(sb);
+
+			if(length == sb.length()){
+				break;
+			}
+
+			matcher.reset(sb.toString());
+			length = sb.length();
+			sb.setLength(0);
+		}
+		return sb.toString();
+	}
 }
